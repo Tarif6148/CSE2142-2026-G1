@@ -9,7 +9,7 @@ public class EmployeeManager {
     static String readFile() throws IOException {
 
         try (BufferedReader reader = new BufferedReader(
-                new FileReader("employees.txt"))) {
+                new FileReader(Constants.FILE_NAME))) {
 
             return reader.readLine();
         }
@@ -19,7 +19,7 @@ public class EmployeeManager {
     static void writeFile(String data) throws IOException {
 
         try (BufferedWriter writer = new BufferedWriter(
-               new FileReader(Constants.FILE_NAME))){
+                new FileWriter(Constants.FILE_NAME))) {
 
             writer.write(data);
         }
@@ -27,7 +27,7 @@ public class EmployeeManager {
 
     public static void main(String[] args) {
 
-        // Check whether an argument is provided
+        // Check arguments
         if (args.length == 0) {
             System.out.println("Please provide an argument.");
             return;
@@ -39,18 +39,14 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
+                String[] employees = readFile().split(",");
 
-                if (line != null && !line.isEmpty()) {
-                    String[] employees = line.split(",");
-
-                    for (String employee : employees) {
-                        System.out.println(employee.trim());
-                    }
+                for (String employee : employees) {
+                    System.out.println(employee.trim());
                 }
 
             } catch (IOException e) {
-                System.out.println("Error reading file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Loaded.");
@@ -62,19 +58,15 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
+                String[] employees = readFile().split(",");
 
-                if (line != null && !line.isEmpty()) {
-                    String[] employees = line.split(",");
+                Random random = new Random();
+                int randomIndex = random.nextInt(employees.length);
 
-                    Random random = new Random();
-                    int randomIndex = random.nextInt(employees.length);
-
-                    System.out.println(employees[randomIndex].trim());
-                }
+                System.out.println(employees[randomIndex].trim());
 
             } catch (IOException e) {
-                System.out.println("Error reading file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Loaded.");
@@ -86,19 +78,23 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
 
             try {
-                String[] employees = reader.readLine().split(",");
+                String employeeName = args[0].substring(1).trim();
 
                 if (!employeeName.isEmpty()) {
+
+                    String line = readFile();
+
                     String data = (line == null || line.isEmpty())
                             ? employeeName
                             : line + ", " + employeeName;
 
                     writeFile(data);
+
                     System.out.println("Employee Added!");
                 }
 
             } catch (IOException e) {
-                System.out.println("Error writing file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Loaded.");
@@ -110,49 +106,45 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
+                String searchName = args[0].substring(1).trim();
 
-                if (line != null && !line.isEmpty()) {
-                    String[] employees = line.split(",");
-                    String searchName = args[0].substring(1).trim();
-                    String searchName = args[0].substring(1);
+                String[] employees = readFile().split(",");
 
-for (String employee : employees) {
+                if (Arrays.stream(employees).anyMatch(
+                        employee -> employee.trim()
+                                .equalsIgnoreCase(searchName))) {
 
-    if (employee.trim().equals(searchName)) {
+                    System.out.println("Employee found!");
 
-        System.out.println("Employee found!");
-        break;
-    }
-}
-
-                
-
-                    if (!found) {
-                        System.out.println("Employee not found!");
-                    }
+                } else {
+                    System.out.println("Employee not found!");
                 }
 
             } catch (IOException e) {
-                System.out.println("Error reading file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Loaded.");
         }
 
-        tring line = readFile().trim();
+        // Count words
+        else if (args[0].equals("c")) {
 
-int wordCount = 0;
+            System.out.println("Loading data ...");
 
-if (!line.isEmpty()) {
-    wordCount = line.split("\\s+").length;
-}
+            try {
+                String line = readFile();
 
-System.out.println(wordCount + " word(s) found");
-        
+                int wordCount = (line == null || line.trim().isEmpty())
+                        ? 0
+                        : line.trim().split("\\s+").length;
+
+                System.out.println(
+                        wordCount + " word(s) found."
+                );
 
             } catch (IOException e) {
-                System.out.println("Error reading file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Loaded.");
@@ -164,33 +156,35 @@ System.out.println(wordCount + " word(s) found");
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
+                String[] employees = readFile().split(",");
 
-                if (line != null && !line.isEmpty()) {
-                    String[] employees = line.split(",");
-                    String employeeName = args[0].substring(1).trim();
+                String employeeName = args[0].substring(1).trim();
 
-                    boolean found = false;
+                boolean employeeFound = false;
 
-                    for (int i = 0; i < employees.length; i++) {
+                for (int i = 0; i < employees.length; i++) {
 
-                        if (employees[i].trim().equalsIgnoreCase(employeeName)) {
-                            employees[i] = "Updated";
-                            found = true;
-                            break;
-                        }
-                    }
+                    if (employees[i].trim()
+                            .equalsIgnoreCase(employeeName)) {
 
-                    if (found) {
-                        writeFile(String.join(",", employees));
-                        System.out.println("Employee Updated!");
-                    } else {
-                        System.out.println("Employee not found!");
+                        employees[i] = "Updated";
+                        employeeFound = true;
+                        break;
                     }
                 }
 
+                if (employeeFound) {
+
+                    writeFile(String.join(",", employees));
+
+                    System.out.println("Employee Updated!");
+
+                } else {
+                    System.out.println("Employee not found!");
+                }
+
             } catch (IOException e) {
-                System.out.println("Error updating file: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Updated.");
@@ -202,35 +196,34 @@ System.out.println(wordCount + " word(s) found");
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
+                String employeeName = args[0].substring(1).trim();
 
-                if (line != null && !line.isEmpty()) {
-                    String[] employees = line.split(",");
-                    String employeeName = args[0].substring(1).trim();
+                List<String> employeeList = new ArrayList<>(
+                        Arrays.asList(readFile().split(","))
+                );
 
-                    List<String> employeeList =
-                            new ArrayList<>(Arrays.asList(employees));
+                boolean employeeRemoved = employeeList.removeIf(
+                        employee -> employee.trim()
+                                .equalsIgnoreCase(employeeName)
+                );
 
-                    boolean removed = employeeList.removeIf(
-                            employee -> employee.trim().equalsIgnoreCase(employeeName)
-                    );
+                if (employeeRemoved) {
 
-                    if (removed) {
-                        writeFile(String.join(",", employeeList));
-                        System.out.println("Employee Deleted!");
-                    } else {
-                        System.out.println("Employee not found!");
-                    }
+                    writeFile(String.join(",", employeeList));
+
+                    System.out.println("Employee Deleted!");
+
+                } else {
+                    System.out.println("Employee not found!");
                 }
 
             } catch (IOException e) {
-                System.out.println("Error deleting employee: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
 
             System.out.println("Data Deleted.");
         }
 
-        // Handle invalid commands
         else {
             System.out.println("Invalid argument!");
         }
