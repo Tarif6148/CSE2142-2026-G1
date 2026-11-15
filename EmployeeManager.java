@@ -76,6 +76,12 @@ public class EmployeeManager {
         else if (args[0].startsWith("+")) {
 
             System.out.println("Loading data ...");
+            else {
+
+    System.out.println("Invalid argument!");
+    System.out.println("Please enter a valid command.");
+
+}
 
             try {
                 String employeeName = args[0].substring(1).trim();
