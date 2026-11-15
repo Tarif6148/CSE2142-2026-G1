@@ -19,7 +19,7 @@ public class EmployeeManager {
     static void writeFile(String data) throws IOException {
 
         try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter("employees.txt"))) {
+               new FileReader(Constants.FILE_NAME))){
 
             writer.write(data);
         }
