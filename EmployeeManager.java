@@ -140,23 +140,16 @@ for (String employee : employees) {
             System.out.println("Data Loaded.");
         }
 
-        // Count employees
-        else if (args[0].equals("c")) {
+        tring line = readFile().trim();
 
-            System.out.println("Loading data ...");
+int wordCount = 0;
 
-            try {
-                String line = readFile();
+if (!line.isEmpty()) {
+    wordCount = line.split("\\s+").length;
+}
 
-                if (line != null && !line.trim().isEmpty()) {
-                    String[] employees = line.split(",");
-
-                    System.out.println(
-                            employees.length + " employee(s) found."
-                    );
-                } else {
-                    System.out.println("0 employee found.");
-                }
+System.out.println(wordCount + " word(s) found");
+        
 
             } catch (IOException e) {
                 System.out.println("Error reading file: " + e.getMessage());
