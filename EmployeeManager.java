@@ -115,17 +115,18 @@ public class EmployeeManager {
                 if (line != null && !line.isEmpty()) {
                     String[] employees = line.split(",");
                     String searchName = args[0].substring(1).trim();
+                    String searchName = args[0].substring(1);
 
-                    boolean found = false;
+for (String employee : employees) {
 
-                    for (String employee : employees) {
+    if (employee.trim().equals(searchName)) {
 
-                        if (employee.trim().equalsIgnoreCase(searchName)) {
-                            System.out.println("Employee found!");
-                            found = true;
-                            break;
-                        }
-                    }
+        System.out.println("Employee found!");
+        break;
+    }
+}
+
+                
 
                     if (!found) {
                         System.out.println("Employee not found!");
