@@ -86,8 +86,7 @@ public class EmployeeManager {
             System.out.println("Loading data ...");
 
             try {
-                String line = readFile();
-                String employeeName = args[0].substring(1).trim();
+                String[] employees = reader.readLine().split(",");
 
                 if (!employeeName.isEmpty()) {
                     String data = (line == null || line.isEmpty())
